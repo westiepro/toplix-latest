@@ -1,6 +1,7 @@
 import path from 'path';
 
 export default ({ env }) => {
+  // Always use PostgreSQL (Supabase) for all environments
   const client = env('DATABASE_CLIENT', 'postgres');
 
   const connections = {
