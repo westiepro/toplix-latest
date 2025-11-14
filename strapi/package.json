@@ -19,7 +19,6 @@
     "@strapi/plugin-users-permissions": "5.31.0",
     "@strapi/strapi": "5.31.0",
     "@strapi/upload": "^5.31.0",
-    "better-sqlite3": "12.4.1",
     "pg": "^8.16.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -44,5 +43,8 @@
   "strapi": {
     "uuid": "d700941b-19f8-42f2-ae0e-5d3b0ce48d3a",
     "installId": "9982a6847952353dc278db5939e0cc9daa138575c63233996b582ddad648ae91"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^12.4.1"
   }
 }
