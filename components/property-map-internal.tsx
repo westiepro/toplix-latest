@@ -35,10 +35,9 @@ function PropertyMapInternal({
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
   // Filter properties with valid coordinates
-  const propertiesWithCoords = properties.filter(
-    (prop): prop is Property & { Latitude: string | number; Longitude: string | number } => 
-      !!prop.Latitude && !!prop.Longitude
-  );
+  const propertiesWithCoords = properties.filter((prop) => {
+    return prop.Latitude != null && prop.Longitude != null;
+  }) as Array<Property & { Latitude: string | number; Longitude: string | number }>;
 
   // Calculate bounds to fit all properties (only once on initial load if enabled)
   useEffect(() => {
