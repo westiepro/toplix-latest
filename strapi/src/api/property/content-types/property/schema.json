@@ -23,12 +23,37 @@
       "type": "integer",
       "required": true
     },
-    "Location": {
+    "Property_Type": {
+      "type": "enumeration",
+      "enum": [
+        "Apartment",
+        "Townhouse",
+        "Villa ",
+        "Land ",
+        "Comercial"
+      ]
+    },
+    "Latitude": {
+      "type": "string",
+      "required": true
+    },
+    "Longitude": {
       "type": "string",
       "required": true
     },
     "Bedrooms": {
       "type": "integer"
+    },
+    "Current_Status": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Active",
+      "enum": [
+        "Active",
+        "Draft",
+        "Sold ",
+        "Rented"
+      ]
     },
     "Bathrooms": {
       "type": "integer"
@@ -46,7 +71,7 @@
         "audios"
       ]
     },
-    "Listing_Status": {
+    "Listing_Type": {
       "type": "enumeration",
       "required": true,
       "default": "For Sale",

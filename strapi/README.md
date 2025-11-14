@@ -1,47 +1,29 @@
-# Strapi Configuration for Strapi Cloud
+# Strapi Local Development Setup
 
-This directory contains your Strapi project configured for deployment to Strapi Cloud with Supabase PostgreSQL database.
+This directory contains your Strapi project configured for local development with Supabase PostgreSQL database.
 
 ## ✅ What's Configured
 
-1. ✅ **PostgreSQL Support** - Database configuration updated for PostgreSQL/Supabase
-2. ✅ **Production Settings** - Default database client set to `postgres`
-3. ✅ **CORS Configuration** - Configured for Next.js frontend and Vercel deployment
-4. ✅ **Security Headers** - Content Security Policy updated for production use
-5. ✅ **PostgreSQL Client** - `pg` package installed
+1. ✅ **PostgreSQL Support** - Database configuration for PostgreSQL/Supabase
+2. ✅ **CORS Configuration** - Configured for Next.js frontend (localhost:3000 and Vercel)
+3. ✅ **Security Headers** - Content Security Policy configured
+4. ✅ **PostgreSQL Client** - `pg` package installed
 
-## 📋 Next Steps for Strapi Cloud Deployment
+## 🚀 Quick Start
 
-### 1. Push to Git Repository
-
-Make sure your Strapi project is committed and pushed to your Git repository:
+### 1. Install Dependencies
 
 ```bash
-git add strapi/
-git commit -m "Add Strapi project configured for Strapi Cloud"
-git push origin main
+cd strapi
+npm install
 ```
 
-### 2. Connect to Strapi Cloud
+### 2. Configure Environment Variables
 
-1. Go to [Strapi Cloud Dashboard](https://cloud.strapi.io/)
-2. Click **"Create new project"**
-3. Connect your Git repository
-4. Select your repository and branch (`main`)
-5. Configure:
-   - **Display name**: `toplix-properties` (or your preferred name)
-   - **Region**: Choose closest to you
-6. Click **"Continue"**
+Create a `.env` file in the `strapi/` directory:
 
-### 3. Configure Environment Variables in Strapi Cloud
-
-In your Strapi Cloud project dashboard:
-
-1. Go to **Settings** → **Environment Variables**
-2. Add the following variables (see `STRAPI_CLOUD_ENV.md` for details):
-
-**Database Configuration:**
 ```bash
+# Database Configuration (Supabase)
 DATABASE_CLIENT=postgres
 DATABASE_HOST=db.xxxxx.supabase.co
 DATABASE_PORT=5432
@@ -50,10 +32,13 @@ DATABASE_USERNAME=postgres
 DATABASE_PASSWORD=your_supabase_password
 DATABASE_SSL=true
 DATABASE_SSL_REJECT_UNAUTHORIZED=true
-```
 
-**Strapi Secrets** (generate using `node ../generate-keys.js`):
-```bash
+# Strapi Configuration
+HOST=0.0.0.0
+PORT=1337
+NODE_ENV=development
+
+# Generate secure keys using: node ../generate-keys.js
 APP_KEYS=key1,key2,key3,key4
 API_TOKEN_SALT=your_secure_random_string
 ADMIN_JWT_SECRET=your_secure_random_string
@@ -61,55 +46,81 @@ TRANSFER_TOKEN_SALT=your_secure_random_string
 JWT_SECRET=your_secure_random_string
 ```
 
-### 4. Connect Supabase Database
+**To generate secure keys:**
+```bash
+cd ..
+node generate-keys.js
+```
 
-1. In Strapi Cloud, go to **Settings** → **Database**
-2. The environment variables above will configure the connection
-3. Strapi Cloud will automatically connect to your Supabase database
+### 3. Start Strapi
 
-### 5. Deploy
+```bash
+cd strapi
+npm run develop
+```
 
-Once configured, Strapi Cloud will automatically:
-- Build your Strapi project
-- Deploy it to production
-- Provide you with your API URL (e.g., `https://your-project.strapi.cloud`)
+Strapi will start at `http://localhost:1337`
 
-### 6. Create Admin User
+### 4. Create Admin User
 
-1. Access your Strapi Cloud admin panel at `https://your-project.strapi.cloud/admin`
-2. Complete the admin registration
+1. Open `http://localhost:1337/admin`
+2. Complete the admin registration (first time only)
 3. Start creating content types and content
+
+## 👥 Working with a Team
+
+### Shared Database Setup
+
+Both developers connect to the **same Supabase database**:
+
+1. **Share Supabase credentials** (securely via password manager or `.env.example`)
+2. **Both developers use the same database connection** in their `.env` files
+3. **Content syncs automatically** - content created by one developer appears for the other
+
+### Content Types via GitHub
+
+1. **Developer 1** creates content type → commits `strapi/src/api/property/` → pushes to GitHub
+2. **Developer 2** pulls from GitHub → gets the same content types
+3. Both developers now have the same content type schemas
+
+### Workflow
+
+```
+Developer 1:
+├── Creates content type locally
+├── Commits to Git: git add strapi/src/api/property/
+├── Pushes: git push origin main
+└── Content saved to shared Supabase
+
+Developer 2:
+├── Pulls: git pull origin main
+├── Gets content type schemas
+├── Runs: npm run develop
+└── Sees content from shared Supabase
+```
 
 ## 📚 Documentation
 
-- **Environment Variables**: See `STRAPI_CLOUD_ENV.md`
-- **Strapi Cloud Setup**: See `../STRAPI_CLOUD_SETUP.md`
+- **Local Setup Guide**: See `../LOCAL_SETUP.md`
+- **Supabase Connection**: See `SUPABASE_CONNECTED.md`
 - **Main Tutorial**: See `../TUTORIAL.md`
 
-## 🔧 Local Development (Optional)
+## 🔧 Available Scripts
 
-If you want to run Strapi locally for development:
+- `npm run develop` - Start Strapi in development mode
+- `npm run build` - Build Strapi for production
+- `npm run start` - Start Strapi in production mode
+- `npm run strapi` - Run Strapi CLI commands
 
-1. Create `.env` file in this directory (see `.env.example` for reference)
-2. Configure your Supabase database credentials
-3. Generate secure keys using `node ../generate-keys.js`
-4. Run: `npm run develop`
+## 🚀 Production Deployment (Optional)
 
-**Note**: For Strapi Cloud deployment, you don't need to run Strapi locally. All configuration happens in the cloud dashboard.
+For production, you can deploy Strapi to:
+- **Railway** - Recommended, easy setup
+- **Render** - Good alternative
+- **Vercel** - For serverless (requires configuration)
 
-## 🚀 Production Checklist
-
-- [ ] Strapi project pushed to Git repository
-- [ ] Strapi Cloud project created
-- [ ] Git repository connected to Strapi Cloud
-- [ ] Environment variables configured in Strapi Cloud
-- [ ] Supabase database credentials added
-- [ ] Strapi secrets generated and added
-- [ ] Deployment successful
-- [ ] Admin user created
-- [ ] Content types created (Property)
-- [ ] Permissions configured
+See deployment guides in the root directory for details.
 
 ---
 
-**Ready to deploy!** Follow the steps above to deploy your Strapi project to Strapi Cloud.
+**Ready to develop!** Run `npm run develop` to start building your content types.

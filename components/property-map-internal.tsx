@@ -23,7 +23,8 @@ function PropertyMapInternal({
   onViewportChange,
   initialFitBounds = true 
 }: PropertyMapProps) {
-  const [popupInfo, setPopupInfo] = useState<(Property & { Latitude: string | number; Longitude: string | number }) | null>(null);
+  type PropertyWithCoords = Property & { Latitude: string | number; Longitude: string | number };
+  const [popupInfo, setPopupInfo] = useState<PropertyWithCoords | null>(null);
   const [viewport, setViewport] = useState({
     latitude: 37.12120,
     longitude: -7.64946,
@@ -35,9 +36,10 @@ function PropertyMapInternal({
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
   // Filter properties with valid coordinates
-  const propertiesWithCoords = properties.filter((prop) => {
-    const lat = (prop as any).Latitude;
-    const lng = (prop as any).Longitude;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const propertiesWithCoords = properties.filter((prop: any) => {
+    const lat = prop.Latitude;
+    const lng = prop.Longitude;
     return lat != null && lng != null;
   }) as Array<Property & { Latitude: string | number; Longitude: string | number }>;
 
@@ -89,6 +91,7 @@ function PropertyMapInternal({
   }, [propertiesWithCoords, initialFitBounds, onViewportChange]);
 
   // Update viewport when map moves
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMove = (evt: any) => {
     const newViewport = evt.viewState;
     setViewport(newViewport);
@@ -112,7 +115,9 @@ function PropertyMapInternal({
     if (selectedPropertyId && mapRef.current) {
       const property = propertiesWithCoords.find((p) => p.id === selectedPropertyId);
       if (property) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const lat = (property as any).Latitude;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const lng = (property as any).Longitude;
         if (lat != null && lng != null) {
           mapRef.current.flyTo({
@@ -154,7 +159,9 @@ function PropertyMapInternal({
         keyboard={true}
       >
         {propertiesWithCoords.map((property) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const lat = Number((property as any).Latitude);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const lng = Number((property as any).Longitude);
           const isSelected = selectedPropertyId === property.id;
 

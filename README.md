@@ -5,9 +5,9 @@ A modern property listing application built with Next.js, Strapi, and Supabase.
 ## Tech Stack
 
 - **Frontend**: Next.js 14, TypeScript, Tailwind CSS, shadcn/ui
-- **Backend**: Strapi Cloud (hosted) or Strapi CMS (self-hosted)
+- **Backend**: Strapi CMS (local development)
 - **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel
+- **Deployment**: Vercel (frontend), Railway/Render (optional for Strapi)
 
 ## Getting Started
 
@@ -21,9 +21,9 @@ A modern property listing application built with Next.js, Strapi, and Supabase.
 
 ### Quick Start
 
-1. **Using Strapi Cloud?** See [STRAPI_CLOUD_SETUP.md](./STRAPI_CLOUD_SETUP.md) for simplified setup (recommended)
+1. **Local Development Setup**: See [LOCAL_SETUP.md](./LOCAL_SETUP.md) for team workflow with local Strapi
 
-2. **Using local Strapi?** See [TUTORIAL.md](./TUTORIAL.md) for complete step-by-step instructions
+2. **Complete Tutorial**: See [TUTORIAL.md](./TUTORIAL.md) for step-by-step instructions
 
 3. **Track your progress**: See [SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)
 
@@ -63,7 +63,10 @@ Copy `.env.example` to `.env.local` and fill in your values:
 
 ```bash
 NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token_here
 ```
+
+**Note**: Get your Mapbox token from [mapbox.com](https://account.mapbox.com/access-tokens/)
 
 For Strapi, copy `strapi/.env.example` to `strapi/.env` and configure your Supabase database connection.
 
@@ -86,6 +89,9 @@ toplix-new/
 
 - ✅ Property listings with images
 - ✅ Property detail pages
+- ✅ Interactive Mapbox map on Buy/Rent pages
+- ✅ Property markers with popups
+- ✅ Click property cards to highlight on map
 - ✅ Responsive design
 - ✅ CMS-powered content management
 - ✅ PostgreSQL database via Supabase
@@ -93,9 +99,11 @@ toplix-new/
 ## Deployment
 
 This project is designed to be deployed on:
-- **Frontend**: Vercel
-- **Backend**: Railway, Render, or Heroku
-- **Database**: Supabase
+- **Frontend**: Vercel (Next.js)
+- **Backend**: Railway or Render (optional - for production Strapi)
+- **Database**: Supabase (PostgreSQL)
+
+**Note**: For development, Strapi runs locally. For production, you can deploy Strapi to Railway/Render or keep it local with a tunnel service.
 
 See [TUTORIAL.md](./TUTORIAL.md) Step 11 for detailed deployment instructions.
 

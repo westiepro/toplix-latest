@@ -14,7 +14,6 @@ export default [
             'blob:',
             'dl.airtable.com',
             '*.supabase.co',
-            '*.strapi.cloud',
           ],
           'media-src': [
             "'self'",
@@ -22,7 +21,6 @@ export default [
             'blob:',
             'dl.airtable.com',
             '*.supabase.co',
-            '*.strapi.cloud',
           ],
           upgradeInsecureRequests: null,
         },

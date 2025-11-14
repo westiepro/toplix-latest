@@ -484,28 +484,20 @@ Visit `http://localhost:3000` - you should see your property!
 
 ## Part 7: Deploy to Vercel
 
-### Step 7.1: Configure Strapi Cloud (Required)
+### Step 7.1: Deploy Strapi for Production (Optional)
 
-Before deploying Next.js, you need Strapi Cloud running:
+For production, you have two options:
 
-1. **Go to Strapi Cloud Dashboard**: https://cloud.strapi.io/
-2. **Your project should already be deployed** (from earlier setup)
-3. **Get your Strapi Cloud URL**: e.g., `https://your-project.strapi.cloud`
-4. **Configure Supabase in Strapi Cloud**:
-   - Go to **Settings** → **Environment Variables**
-   - Add the same Supabase credentials:
-     ```
-     DATABASE_CLIENT=postgres
-     DATABASE_HOST=db.luyjehygdbsvjoyrkcsn.supabase.co
-     DATABASE_PORT=5432
-     DATABASE_NAME=postgres
-     DATABASE_USERNAME=postgres
-     DATABASE_PASSWORD=s48AgFUkZSmYX53F
-     DATABASE_SSL=true
-     DATABASE_SSL_REJECT_UNAUTHORIZED=false
-     ```
-   - Add Strapi secrets (generate using `node generate-keys.js`)
-5. **Ensure Property content type exists** in Strapi Cloud (should be auto-deployed from Git)
+**Option A: Deploy Strapi to Railway/Render** (Recommended)
+- See deployment guides in root directory
+- Provides always-on Strapi API for production
+
+**Option B: Use Local Strapi** (Development only)
+- Keep Strapi running locally
+- Use tunnel service (ngrok) to expose localhost:1337
+- Not recommended for production
+
+**For now, we'll use local Strapi for development.**
 
 ### Step 7.2: Push Code to GitHub
 
@@ -538,7 +530,8 @@ git push origin main
    - Click "Environment Variables"
    - Add:
      - **Key**: `NEXT_PUBLIC_STRAPI_API_URL`
-     - **Value**: `https://your-project.strapi.cloud` (your actual Strapi Cloud URL)
+     - **Value**: `http://localhost:1337` (for local development)
+     - **Note**: For production, use your deployed Strapi URL (Railway/Render)
    - Click "Add"
 
 6. **Deploy**:
@@ -546,14 +539,11 @@ git push origin main
    - Wait for deployment (1-2 minutes)
    - You'll get a URL like: `https://toplix-latest.vercel.app`
 
-### Step 7.4: Update Strapi Cloud CORS
+### Step 7.4: Configure CORS (If Needed)
 
-1. **Go to Strapi Cloud Dashboard**
-2. **Settings** → **API** → **CORS** (or Security)
-3. **Add your Vercel URL**:
-   - `https://toplix-latest.vercel.app`
-   - `https://*.vercel.app` (for all Vercel deployments)
-4. **Save**
+If you deploy Strapi to Railway/Render, update CORS settings:
+- Add your Vercel URL to allowed origins
+- For local development, CORS is already configured in `strapi/config/middlewares.ts`
 
 ### Step 7.5: Verify Deployment
 
@@ -569,13 +559,13 @@ git push origin main
 ### Properties not showing on Vercel
 
 - Check `NEXT_PUBLIC_STRAPI_API_URL` in Vercel environment variables
-- Ensure Strapi Cloud CORS includes your Vercel URL
-- Check Strapi Cloud is running and accessible
-- Verify Property permissions are set to Public
+- Ensure Strapi is running locally (or deployed to Railway/Render)
+- Verify Property permissions are set to Public in Strapi admin
+- Check CORS settings if using deployed Strapi
 
 ### Images not loading
 
-- Check `next.config.ts` has Strapi Cloud image domains
+- Check `next.config.ts` has correct image domains
 - Verify image URLs in browser DevTools
 - Ensure images are uploaded and published in Strapi
 
@@ -593,7 +583,7 @@ git push origin main
 ✅ **Created first property entry**
 ✅ **Built Next.js frontend**
 ✅ **Deployed to Vercel**
-✅ **Connected to Strapi Cloud**
+✅ **Strapi running locally**
 
 **Your site is live!** 🎉
 

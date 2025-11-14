@@ -6,23 +6,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function PropertyPage({ params }: PageProps) {
-  const property = await getPropertyBySlug(params.slug);
+  // Await params in Next.js 16
+  const { slug } = await params;
+  
+  console.log('Looking for property with slug:', slug);
+  const property = await getPropertyBySlug(slug);
 
   if (!property) {
+    console.log('Property not found for slug:', slug);
     notFound();
   }
 
-  const { attributes } = property;
-  const images = attributes.images?.data || [];
-  const mainImage = images[0]?.attributes?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${images[0].attributes.url}`
-    : '/placeholder-property.jpg';
+  const images = property.Images || [];
+  const mainImage = images[0]?.url || '/placeholder-property.jpg';
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -37,8 +39,9 @@ export default async function PropertyPage({ params }: PageProps) {
           <div className="relative h-96 w-full rounded-lg overflow-hidden mb-4">
             <Image
               src={mainImage}
-              alt={attributes.title}
+              alt={property.Title}
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
           </div>
@@ -47,9 +50,10 @@ export default async function PropertyPage({ params }: PageProps) {
               {images.slice(1, 5).map((image) => (
                 <div key={image.id} className="relative h-20 w-full rounded overflow-hidden">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${image.attributes.url}`}
-                    alt={image.attributes.alternativeText || attributes.title}
+                    src={image.url}
+                    alt={image.alternativeText || property.Title}
                     fill
+                    sizes="(max-width: 768px) 25vw, 12.5vw"
                     className="object-cover"
                   />
                 </div>
@@ -60,13 +64,15 @@ export default async function PropertyPage({ params }: PageProps) {
 
         <div>
           <Badge className="mb-4" variant="secondary">
-            {attributes.status}
+            {property.Listing_Type || property.Listing_Status || 'Available'}
           </Badge>
-          <h1 className="text-4xl font-bold mb-2">{attributes.title}</h1>
+          <h1 className="text-4xl font-bold mb-2">{property.Title}</h1>
           <p className="text-2xl font-bold text-primary mb-4">
-            ${attributes.price.toLocaleString()}
+            €{property.Price.toLocaleString()}
           </p>
-          <p className="text-lg text-muted-foreground mb-6">{attributes.location}</p>
+          {property.Location && (
+            <p className="text-lg text-muted-foreground mb-6">{property.Location}</p>
+          )}
 
           <Card className="mb-6">
             <CardHeader>
@@ -74,22 +80,22 @@ export default async function PropertyPage({ params }: PageProps) {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                {attributes.bedrooms && (
+                {property.Bedrooms && (
                   <div>
                     <p className="text-sm text-muted-foreground">Bedrooms</p>
-                    <p className="text-lg font-semibold">{attributes.bedrooms}</p>
+                    <p className="text-lg font-semibold">{property.Bedrooms}</p>
                   </div>
                 )}
-                {attributes.bathrooms && (
+                {property.Bathrooms && (
                   <div>
                     <p className="text-sm text-muted-foreground">Bathrooms</p>
-                    <p className="text-lg font-semibold">{attributes.bathrooms}</p>
+                    <p className="text-lg font-semibold">{property.Bathrooms}</p>
                   </div>
                 )}
-                {attributes.area && (
+                {property.Area && (
                   <div>
                     <p className="text-sm text-muted-foreground">Area</p>
-                    <p className="text-lg font-semibold">{attributes.area} sqft</p>
+                    <p className="text-lg font-semibold">{Math.round(property.Area * 0.092903)} m²</p>
                   </div>
                 )}
               </div>
@@ -101,7 +107,7 @@ export default async function PropertyPage({ params }: PageProps) {
               <CardTitle>Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="whitespace-pre-line">{attributes.description}</p>
+              <p className="whitespace-pre-line">{property.Description}</p>
             </CardContent>
           </Card>
         </div>
@@ -109,4 +115,3 @@ export default async function PropertyPage({ params }: PageProps) {
     </main>
   );
 }
-
