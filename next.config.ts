@@ -16,10 +16,22 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: '*.railway.app',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.onrender.com',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
         hostname: '*.supabase.co',
         pathname: '/storage/**',
       },
     ],
+    // Allow unoptimized images in development to avoid localhost issues
+    unoptimized: process.env.NODE_ENV === 'development',
   },
 };
 
