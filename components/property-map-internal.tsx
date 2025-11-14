@@ -23,7 +23,7 @@ function PropertyMapInternal({
   onViewportChange,
   initialFitBounds = true 
 }: PropertyMapProps) {
-  const [popupInfo, setPopupInfo] = useState<Property | null>(null);
+  const [popupInfo, setPopupInfo] = useState<(Property & { Latitude: string | number; Longitude: string | number }) | null>(null);
   const [viewport, setViewport] = useState({
     latitude: 37.12120,
     longitude: -7.64946,
@@ -168,7 +168,7 @@ function PropertyMapInternal({
               anchor="bottom"
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
-                setPopupInfo(property);
+                setPopupInfo(property as Property & { Latitude: string | number; Longitude: string | number });
                 onMarkerClick?.(property);
               }}
             >
@@ -204,11 +204,11 @@ function PropertyMapInternal({
           );
         })}
 
-        {popupInfo && (popupInfo as any).Latitude && (popupInfo as any).Longitude && (
+        {popupInfo && popupInfo.Latitude && popupInfo.Longitude && (
           <Popup
             anchor="bottom"
-            longitude={Number((popupInfo as any).Longitude)}
-            latitude={Number((popupInfo as any).Latitude)}
+            longitude={Number(popupInfo.Longitude)}
+            latitude={Number(popupInfo.Latitude)}
             onClose={() => setPopupInfo(null)}
             closeOnClick={false}
             className="mapbox-popup"
