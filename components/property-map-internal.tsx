@@ -175,7 +175,7 @@ function PropertyMapInternal({
               anchor="bottom"
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
-                setPopupInfo(property as Property & { Latitude: string | number; Longitude: string | number });
+                setPopupInfo(property as PropertyWithCoords);
                 onMarkerClick?.(property);
               }}
             >
