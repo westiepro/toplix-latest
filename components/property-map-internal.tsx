@@ -36,7 +36,9 @@ function PropertyMapInternal({
 
   // Filter properties with valid coordinates
   const propertiesWithCoords = properties.filter((prop) => {
-    return prop.Latitude != null && prop.Longitude != null;
+    const lat = (prop as any).Latitude;
+    const lng = (prop as any).Longitude;
+    return lat != null && lng != null;
   }) as Array<Property & { Latitude: string | number; Longitude: string | number }>;
 
   // Calculate bounds to fit all properties (only once on initial load if enabled)
