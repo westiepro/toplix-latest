@@ -111,12 +111,16 @@ function PropertyMapInternal({
   useEffect(() => {
     if (selectedPropertyId && mapRef.current) {
       const property = propertiesWithCoords.find((p) => p.id === selectedPropertyId);
-      if (property && property.Latitude && property.Longitude) {
-        mapRef.current.flyTo({
-          center: [Number(property.Longitude), Number(property.Latitude)],
-          zoom: 14,
-          duration: 1000,
-        });
+      if (property) {
+        const lat = (property as any).Latitude;
+        const lng = (property as any).Longitude;
+        if (lat != null && lng != null) {
+          mapRef.current.flyTo({
+            center: [Number(lng), Number(lat)],
+            zoom: 14,
+            duration: 1000,
+          });
+        }
       }
     }
   }, [selectedPropertyId, propertiesWithCoords]);
@@ -150,8 +154,8 @@ function PropertyMapInternal({
         keyboard={true}
       >
         {propertiesWithCoords.map((property) => {
-          const lat = Number(property.Latitude);
-          const lng = Number(property.Longitude);
+          const lat = Number((property as any).Latitude);
+          const lng = Number((property as any).Longitude);
           const isSelected = selectedPropertyId === property.id;
 
           if (isNaN(lat) || isNaN(lng)) return null;
@@ -200,11 +204,11 @@ function PropertyMapInternal({
           );
         })}
 
-        {popupInfo && popupInfo.Latitude && popupInfo.Longitude && (
+        {popupInfo && (popupInfo as any).Latitude && (popupInfo as any).Longitude && (
           <Popup
             anchor="bottom"
-            longitude={Number(popupInfo.Longitude)}
-            latitude={Number(popupInfo.Latitude)}
+            longitude={Number((popupInfo as any).Longitude)}
+            latitude={Number((popupInfo as any).Latitude)}
             onClose={() => setPopupInfo(null)}
             closeOnClick={false}
             className="mapbox-popup"
