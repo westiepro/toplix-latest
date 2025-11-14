@@ -2,6 +2,12 @@ import axios from 'axios';
 
 const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
 
+// Debug logging for production
+if (typeof window === 'undefined') {
+  console.log('🔍 Strapi URL:', strapiUrl);
+  console.log('🔍 Environment:', process.env.NODE_ENV);
+}
+
 export const strapiClient = axios.create({
   baseURL: `${strapiUrl}/api`,
   headers: {
@@ -47,13 +53,19 @@ export interface Property {
 
 export async function getProperties() {
   try {
-    console.log('Fetching properties from:', `${strapiUrl}/api/properties`);
+    console.log('🔍 Fetching properties from:', `${strapiUrl}/api/properties`);
+    if (!strapiUrl || strapiUrl === 'http://localhost:1337') {
+      console.warn('⚠️ NEXT_PUBLIC_STRAPI_API_URL not set! Using localhost. This will fail on Vercel.');
+    }
     const response = await strapiClient.get('/properties?populate=Images');
-    console.log('API Response received:', response.status);
+    console.log('✅ API Response received:', response.status);
     
     // Strapi v5 returns data in flat format
     const properties = response.data.data as Property[];
-    console.log('Properties found:', properties.length);
+    console.log('✅ Properties found:', properties.length);
+    if (properties.length === 0) {
+      console.warn('⚠️ No properties returned from Strapi. Check if properties are published.');
+    }
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return properties.map((prop: any) => {
